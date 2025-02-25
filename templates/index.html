@@ -81,11 +81,29 @@
             .then(response => response.json())
             .then(data => {
                 document.getElementById("typingIndicator").remove();
-                chatbox.innerHTML += `<div class="bot">Bot: ${data.response}</div>`;
-                chatbox.scrollTop = chatbox.scrollHeight;
+                simulateTypingEffect(data.response);
             });
 
             document.getElementById("userInput").value = "";
+        }
+
+        function simulateTypingEffect(text) {
+            let chatbox = document.getElementById("chatbox");
+            let botMessage = document.createElement("div");
+            botMessage.className = "bot";
+            botMessage.innerHTML = "Bot: ";
+            chatbox.appendChild(botMessage);
+
+            let index = 0;
+            function typeNextLetter() {
+                if (index < text.length) {
+                    botMessage.innerHTML += text[index];
+                    index++;
+                    chatbox.scrollTop = chatbox.scrollHeight;
+                    setTimeout(typeNextLetter, 30); // Adjust speed here (30ms per letter)
+                }
+            }
+            typeNextLetter();
         }
 
         function handleKeyPress(event) {
